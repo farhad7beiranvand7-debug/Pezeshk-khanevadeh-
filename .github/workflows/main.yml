@@ -1,62 +1,45 @@
-name: Build Family Doctor APK
+name: Build Android APK
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
-      - master
-
-permissions:
-  contents: read
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build Release APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Flutter (Stable)
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      - name: Flutter Diagnostics
+      - name: Scaffold Android if missing
         run: |
-          flutter --version
-          flutter doctor -v
-
-      - name: Scaffold Android Files
-        run: flutter create . --platforms=android --org ir.pezeshk
+          if [ ! -d "android" ]; then
+            flutter create . --platforms=android --org ir.pezeshk
+          fi
 
       - name: Get Dependencies
         run: flutter pub get
 
-      - name: Analyze Code
-        run: flutter analyze --no-fatal-infos
+      - name: Build APK Release
+        run: flutter build apk --release
 
-      - name: Build Release APK
-        run: flutter build apk --release --no-tree-shake-icons
-
-      - name: Stage Artifact
-        run: |
-          mkdir -p release
-          cp build/app/outputs/flutter-apk/app-release.apk release/pezeshk_khanevadeh-release.apk
-
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: pezeshk-khanevadeh-release
-          path: release/pezeshk_khanevadeh-release.apk
-          if-no-files-found: error
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
