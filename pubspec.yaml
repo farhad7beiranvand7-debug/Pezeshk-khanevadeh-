@@ -1,5 +1,5 @@
 name: pezeshk_khanevadeh
-description: "خانه بهداشت - سامانه مراقبت و سلامت خانواده"
+description: "Khane Behdasht"
 publish_to: "none"
 version: 1.4.0+4
 
@@ -34,14 +34,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/store/icon_1024.png
-
----
-
-### بخش ۳: ساخت کلید امضا (Keystore) برای کافه‌بازار
-
-کافه‌بازار برنامه‌های با کلید پیش‌فرض (Debug) را نمی‌پذیرد. این کار را یک‌بار انجام دهید:
-
-1. در ترمینال سیستم خود این دستور را اجرا کنید:
-```bash
-   keytool -genkey -v -keystore release-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias khane_behdasht
-   
